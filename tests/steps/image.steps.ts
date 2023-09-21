@@ -33,14 +33,23 @@ defineFeature(feature, (test) => {
     when(
       /^I execute the '\/api\/image' API and receive the response$/,
       async () => {
-        await apiContext.execute().then((response: any) => {
-          apiResponse = {
-            header: response.headers,
-            status: response.status,
-            body: response.data,
-          };
-        });
-        uuid = extractUUIDFromUrl(apiResponse.body.image);
+        await apiContext
+          .execute()
+          .then((response: any) => {
+            apiResponse = {
+              header: response.headers,
+              status: response.status,
+              body: response.data,
+            };
+          })
+          .catch((err) => {
+            const responseErr = err.response;
+            apiResponse = {
+              header: responseErr.headers,
+              status: responseErr.status,
+              body: responseErr.data,
+            };
+          });
       }
     );
   };
@@ -55,6 +64,7 @@ defineFeature(feature, (test) => {
     and(
       /^the response have a permanent link to this picture in the correct format$/,
       () => {
+        uuid = extractUUIDFromUrl(apiResponse.body.image);
         imageUrl = apiResponse.body.image;
         uuid = extractUUIDFromUrl(imageUrl);
         commonStep.validateImageUrlIsInCorrectFormat(
@@ -85,75 +95,75 @@ defineFeature(feature, (test) => {
     );
   };
 
-  // test("01 I have a permanent link when attach a picture to the Service", async ({
-  //   given,
-  //   when,
-  //   then,
-  //   and,
-  // }) => {
-  //   given(
-  //     /^I make '(.*)' request to '(.*)' attached a picture with extension '(.*)'$/,
-  //     (apiMethod: string, path: string, fileExtension: string) => {
-  //       imageExtension = fileExtension;
-  //       const form = new FormData();
-  //       form.append("file", fs.createReadStream(FilePath[fileExtension]));
-  //       const apiConfig: ApiConfig = {
-  //         url: `${getCurrentBaseURL()}${path}`,
-  //         method: apiMethod,
-  //         headers: {
-  //           ...form.getHeaders(),
-  //         },
-  //         data: form,
-  //       };
-  //       apiContext = new ApiContext(apiConfig);
-  //     }
-  //   );
+  test("01 I have a permanent link when attach a picture to the Service", async ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    given(
+      /^I make '(.*)' request to '(.*)' attached a picture with extension '(.*)'$/,
+      (apiMethod: string, path: string, fileExtension: string) => {
+        imageExtension = fileExtension;
+        const form = new FormData();
+        form.append("file", fs.createReadStream(FilePath[fileExtension]));
+        const apiConfig: ApiConfig = {
+          url: `${getCurrentBaseURL()}${path}`,
+          method: apiMethod,
+          headers: {
+            ...form.getHeaders(),
+          },
+          data: form,
+        };
+        apiContext = new ApiContext(apiConfig);
+      }
+    );
 
-  //   whenIExecuteTheImageAPIAndReceiveResponse(when);
+    whenIExecuteTheImageAPIAndReceiveResponse(when);
 
-  //   thenIExpectResponseHaveCorrectStatus(then);
+    thenIExpectResponseHaveCorrectStatus(then);
 
-  //   andTheReponseHaveCorrectFormat(and);
+    andTheReponseHaveCorrectFormat(and);
 
-  //   andTheResponseHaveCorrectSchema(and);
+    andTheResponseHaveCorrectSchema(and);
 
-  //   andTheUUIDIsInCorrectVersion(and);
-  // });
+    andTheUUIDIsInCorrectVersion(and);
+  });
 
-  // test("02 I have a permanent link when attach a large-size picture to the Service", async ({
-  //   given,
-  //   when,
-  //   then,
-  //   and,
-  // }) => {
-  //   given(
-  //     /^I make a '(.*)' request to '(.*)' attached a large size picture$/,
-  //     (apiMethod: string, path: string) => {
-  //       const form = new FormData();
-  //       form.append("file", fs.createReadStream(LargeFile.IMAGE));
-  //       imageExtension = ".png";
-  //       const apiConfig: ApiConfig = {
-  //         url: `${getCurrentBaseURL()}${path}`,
-  //         method: apiMethod,
-  //         headers: {
-  //           ...form.getHeaders(),
-  //         },
-  //         data: form,
-  //       };
-  //       apiContext = new ApiContext(apiConfig);
-  //     }
-  //   );
+  test("02 I have a permanent link when attach a large-size picture to the Service", async ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    given(
+      /^I make a '(.*)' request to '(.*)' attached a large size picture$/,
+      (apiMethod: string, path: string) => {
+        const form = new FormData();
+        form.append("file", fs.createReadStream(LargeFile.IMAGE));
+        imageExtension = ".png";
+        const apiConfig: ApiConfig = {
+          url: `${getCurrentBaseURL()}${path}`,
+          method: apiMethod,
+          headers: {
+            ...form.getHeaders(),
+          },
+          data: form,
+        };
+        apiContext = new ApiContext(apiConfig);
+      }
+    );
 
-  //   whenIExecuteTheImageAPIAndReceiveResponse(when);
+    whenIExecuteTheImageAPIAndReceiveResponse(when);
 
-  //   thenIExpectResponseHaveCorrectStatus(then);
+    thenIExpectResponseHaveCorrectStatus(then);
 
-  //   andTheReponseHaveCorrectFormat(and);
+    andTheReponseHaveCorrectFormat(and);
 
-  //   andTheResponseHaveCorrectSchema(and);
+    andTheResponseHaveCorrectSchema(and);
 
-  //   andTheUUIDIsInCorrectVersion(and);
-  // });
+    andTheUUIDIsInCorrectVersion(and);
+  });
 
   test("03 I can not attach a file which is not an image to the Service", async ({
     given,
