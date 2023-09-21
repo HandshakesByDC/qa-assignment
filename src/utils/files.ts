@@ -10,7 +10,6 @@ export async function createStreamableFile(path: string): Promise<File> {
   const file = new File([], name);
   file.stream = () => handle.readableWebStream();
 
-  // Set correct size otherwise, fetch will encounter UND_ERR_REQ_CONTENT_LENGTH_MISMATCH
   Object.defineProperty(file, "size", { get: () => size });
 
   return file;

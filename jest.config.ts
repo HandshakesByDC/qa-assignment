@@ -14,7 +14,7 @@ const config: Config.InitialOptions = {
         openReport: false,
         expand: true,
         enableMergeData: true,
-        pageTitle: `Long test ${new Date()}`,
+        pageTitle: `Automation API Execution test at ${new Date().toUTCString()}`,
       },
     ],
   ],
