@@ -1,0 +1,48 @@
+name: Jest Test and Publish HTML Report
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies using Yarn
+        run: yarn install
+
+      - name: Run Jest tests using Yarn
+        run: yarn test
+
+      - name: Upload HTML report as artifact. To troubleshoot failures, extract .zip and double-click index.html.
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          path: ./reports
+
+  publishTestResults:
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        id: download
+
+      - name: "Publish test results"
+        uses: peaceiris/actions-gh-pages@v3.9.3
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.ACTION_TOKEN }}
+          publish_dir: ${{steps.download.outputs.download-path}}
+          keep_files: true
