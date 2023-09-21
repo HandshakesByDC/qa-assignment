@@ -1,38 +1,66 @@
 # Technical QA Assessment
+
 A take-home automation testing assignment for QA interview.
 
-## Your Task
-1.	Develop API automation test to validate the following user stories using Typescript.
-2.	Write some high-level test scenarios for each user story.
-3.	Register the bug(s) found during testing.
+## Introduction
+
+This repo consists of the Jest API automation testing for the QA Assignment
 
 ### User Stories
-* User Story 1 - 
-In order to store and use my pictures through the https://assessement.onrender.com/api/image API service:
-As an Anonymous user,
-I want to attach a picture to the Service
-and I want to have a permanent link to this picture,
-Otherwise, I want to be rejected and informed if the file is not a picture.
 
-* User Story 2 - 
-In order to save my time from uploading my pictures multiple times via https://assessement.onrender.com/api/zip API service:
-As an Anonymous user,
-I want to attach a zip file containing multiple images
-and I want each of these uploaded images to have a permanent link.
+- User Story 1 -
+  In order to store and use my pictures through the https://assessement.onrender.com/api/image API service:
+  As an Anonymous user,
+  I want to attach a picture to the Service
+  and I want to have a permanent link to this picture,
+  Otherwise, I want to be rejected and informed if the file is not a picture.
 
-## Getting Started
-Please review the information in this section before you get started with your development. 
+- User Story 2 -
+  In order to save my time from uploading my pictures multiple times via https://assessement.onrender.com/api/zip API service:
+  As an Anonymous user,
+  I want to attach a zip file containing multiple images
+  and I want each of these uploaded images to have a permanent link.
 
-* Create a personal fork of the project on Github.
-* Clone the fork on your local machine.
-* Implement your solution and push the test automation codes and test documents to forked repository.
-* When you are ready, submit the forked repo for review by providing the link to the repo to our recruitment team.
+## Installation
 
-### Tools
-You are free to choose the IDE (Integrated Development Environment) tool you are most comfortable with.
+**Install dependencies**
 
-## Time Estimates
-This assignment should take about 2 to 4 hours of your time depending on your level of experiences. 
+Node Version: 16.x, 18.x ++
 
-## Need Help
-Create a github issue. We'll get back to you.
+Clone the generated repository on your local machine, move to the project root folder and install the dependencies defined in [`package.json`](./package.json)
+
+Using: Yarn or Npm
+Install yarn:
+
+```bash
+$ npm install --global yarn
+```
+
+Install package by Npm:
+
+```bash
+$ npm install
+```
+
+Install package by Yarn:
+
+```bash
+$ yarn install
+```
+
+## CI / CD Flow using Github Action
+
+- When the above tests are finished, the results are published to GitHub pages:
+
+* https://simonetrinh.github.io/HandshakesByDC-QA-Assignment/artifact/report.html
+
+- We can setup cron-job to run nighly but here I did not setup to save the resource for Github.
+- As my config, it will be automatically triggered right after a Pull request merged or we can run it again by re-run any job.
+
+## Running API Tests
+
+Go to the Project root directory and run command: (Yarn is prefer to show in the bash, if you are using Npm, replace it by npm)
+
+```bash
+$ yarn test
+```
