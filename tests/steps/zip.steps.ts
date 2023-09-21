@@ -2,8 +2,8 @@ import FormData from "form-data";
 import { DefineStepFunction, defineFeature, loadFeature } from "jest-cucumber";
 import fs from "fs";
 import { FilePath, ZipPath } from "../../src/constants/files";
-import { getCurrentBaseURL } from "../../src/core/env/env";
-import { ApiContext } from "../../src/core/api/ApiContext";
+import { getCurrentBaseURL } from "../../src/services/env/env";
+import { ApiContext } from "../../src/services/api/ApiContext";
 import { CommonStep } from "./common";
 import { ApiResponse } from "../../src/types/apiResponse";
 import { ApiConfig } from "../../src/types/apiConfig";
@@ -50,7 +50,7 @@ defineFeature(feature, (test) => {
 
   const thenIExpectResponseHaveCorrectStatus = (then: DefineStepFunction) => {
     then(/^I expect response should have status (\d+)$/, (status) => {
-      expect(apiResponse.status).toEqual(parseInt(status));
+      commonStep.validateResponseStatusEqual(apiResponse.status, status);
     });
   };
 
@@ -58,7 +58,10 @@ defineFeature(feature, (test) => {
     and(
       /^the response should have a json schema '(.*)'$/,
       (jsonStringSchema: string) => {
-        expect(apiResponse.body).toMatchSchema(JSON.parse(jsonStringSchema));
+        commonStep.validateJsonToMatchSchema(
+          apiResponse.body,
+          jsonStringSchema
+        );
       }
     );
   };
@@ -79,7 +82,7 @@ defineFeature(feature, (test) => {
       /^total links in response equal with total image files in Zip file$/,
       async () => {
         const totalFileInZip = await getTotalFileInZip(zipPath);
-        expect(listImages.length).toEqual(totalFileInZip);
+        commonStep.validateObjectToEqual(listImages.length, totalFileInZip);
       }
     );
   };
@@ -91,7 +94,7 @@ defineFeature(feature, (test) => {
         const version = extractNumberFromString(uuidVersion);
         listImages.forEach((imageLink) => {
           const uuid: string = extractUUIDFromUrl(imageLink);
-          expect(validator.isUUID(uuid, version)).toBeTruthy();
+          commonStep.validateUUIDIsInVersion(uuid, version);
         });
       }
     );
@@ -101,14 +104,14 @@ defineFeature(feature, (test) => {
     and(
       /^the error in response message should be "(.*)"$/,
       (errorMsg: string) => {
-        expect(apiResponse.body.err).toEqual(errorMsg);
+        commonStep.validateObjectToEqual(apiResponse.body.err, errorMsg);
       }
     );
   };
 
   const andTheResponseShouldContainsCorrectMsg = (and: DefineStepFunction) => {
     and(/^the response should contains '(.*)'$/, (errorMsg: string) => {
-      expect(apiResponse.body).toContain(errorMsg);
+      commonStep.validateObjectContains(apiResponse.body, errorMsg);
     });
   };
 
@@ -266,7 +269,7 @@ defineFeature(feature, (test) => {
       /^total links in response less than total image files in Zip file$/,
       async () => {
         const totalFileInZip = await getTotalFileInZip(zipPath);
-        expect(listImages.length).toBeLessThan(totalFileInZip);
+        commonStep.validateOjectLessThan(listImages.length, totalFileInZip);
       }
     );
 
