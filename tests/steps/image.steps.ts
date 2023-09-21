@@ -1,7 +1,7 @@
 import { DefineStepFunction, defineFeature, loadFeature } from "jest-cucumber";
-import { ApiContext } from "../../src/core/api/ApiContext";
+import { ApiContext } from "../../src/services/api/ApiContext";
 import { ApiConfig } from "../../src/types/apiConfig";
-import { getCurrentBaseURL } from "../../src/core/env/env";
+import { getCurrentBaseURL } from "../../src/services/env/env";
 import FormData from "form-data";
 import fs from "fs";
 import { FilePath, LargeFile } from "../../src/constants/files";
@@ -53,7 +53,7 @@ defineFeature(feature, (test) => {
 
   const thenIExpectResponseHaveCorrectStatus = (then: DefineStepFunction) => {
     then(/^I expect response should have status (\d+)$/, (status) => {
-      expect(apiResponse.status).toEqual(parseInt(status));
+      commonStep.validateResponseStatusEqual(apiResponse.status, status);
     });
   };
 
@@ -76,7 +76,10 @@ defineFeature(feature, (test) => {
     and(
       /^the response should have a json schema '(.*)'$/,
       (jsonStringSchema: string) => {
-        expect(apiResponse.body).toMatchSchema(JSON.parse(jsonStringSchema));
+        commonStep.validateJsonToMatchSchema(
+          apiResponse.body,
+          jsonStringSchema
+        );
       }
     );
   };
@@ -86,14 +89,14 @@ defineFeature(feature, (test) => {
       /^the image ID in the response is the valid UUID '(.*)'$/,
       (uuidVersion: string) => {
         const version = extractNumberFromString(uuidVersion);
-        expect(validator.isUUID(uuid, version)).toBeTruthy();
+        commonStep.validateUUIDIsInVersion(uuid, version);
       }
     );
   };
 
   const andTheResponseShouldContainsCorrectMsg = (and: DefineStepFunction) => {
     and(/^the response should contains '(.*)'$/, (errorMsg: string) => {
-      expect(apiResponse.body).toContain(errorMsg);
+      commonStep.validateObjectContains(apiResponse.body, errorMsg);
     });
   };
 
@@ -200,7 +203,7 @@ defineFeature(feature, (test) => {
     and(
       /^the error in response message should be "(.*)"$/,
       (errorMsg: string) => {
-        expect(apiResponse.body.err).toEqual(errorMsg);
+        commonStep.validateObjectToEqual(apiResponse.body.err, errorMsg);
       }
     );
   });
