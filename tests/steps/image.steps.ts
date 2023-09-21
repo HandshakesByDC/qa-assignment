@@ -30,28 +30,25 @@ defineFeature(feature, (test) => {
   const whenIExecuteTheImageAPIAndReceiveResponse = (
     when: DefineStepFunction
   ) => {
-    when(
-      /^I execute the '\/api\/image' API and receive the response$/,
-      async () => {
-        await apiContext
-          .execute()
-          .then((response: any) => {
-            apiResponse = {
-              header: response.headers,
-              status: response.status,
-              body: response.data,
-            };
-          })
-          .catch((err) => {
-            const responseErr = err.response;
-            apiResponse = {
-              header: responseErr.headers,
-              status: responseErr.status,
-              body: responseErr.data,
-            };
-          });
-      }
-    );
+    when(/^I execute the '(.*)' API and receive the response$/, async () => {
+      await apiContext
+        .execute()
+        .then((response: any) => {
+          apiResponse = {
+            header: response.headers,
+            status: response.status,
+            body: response.data,
+          };
+        })
+        .catch((err) => {
+          const responseErr = err.response;
+          apiResponse = {
+            header: responseErr.headers,
+            status: responseErr.status,
+            body: responseErr.data,
+          };
+        });
+    });
   };
 
   const thenIExpectResponseHaveCorrectStatus = (then: DefineStepFunction) => {
@@ -93,6 +90,12 @@ defineFeature(feature, (test) => {
         expect(validator.isUUID(uuid, version)).toBeTruthy();
       }
     );
+  };
+
+  const andTheResponseShouldContainsCorrectMsg = (and: DefineStepFunction) => {
+    and(/^the response should contains '(.*)'$/, (errorMsg: string) => {
+      expect(apiResponse.body).toContain(errorMsg);
+    });
   };
 
   test("01 I have a permanent link when attach a picture to the Service", async ({
@@ -172,7 +175,7 @@ defineFeature(feature, (test) => {
     and,
   }) => {
     given(
-      /^I make a '(.*)' request to '(.*)' attached a '(.*)' file which is not an image$/,
+      /^I make a '(.*)' request to '(.*)' attached a '(.*)' file which is not an picture$/,
       (apiMethod: string, path: string, fileExtension: string) => {
         const form = new FormData();
         form.append("file", fs.createReadStream(FilePath[fileExtension]));
@@ -201,5 +204,95 @@ defineFeature(feature, (test) => {
         expect(apiResponse.body.err).toEqual(errorMsg);
       }
     );
+  });
+
+  test("04 The Service will return error when I request without attach any picture", async ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    given(
+      /^I make a '(.*)' request to '(.*)' without attach any picture$/,
+      (apiMethod: string, path: string) => {
+        const form = new FormData();
+        const apiConfig: ApiConfig = {
+          url: `${getCurrentBaseURL()}${path}`,
+          method: apiMethod,
+          headers: {
+            ...form.getHeaders(),
+          },
+          data: form,
+        };
+        apiContext = new ApiContext(apiConfig);
+      }
+    );
+
+    whenIExecuteTheImageAPIAndReceiveResponse(when);
+
+    thenIExpectResponseHaveCorrectStatus(then);
+
+    andTheResponseShouldContainsCorrectMsg(and);
+  });
+
+  test("05 The Service will return error when I upload picture to the incorrect endpoint", async ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    given(
+      /^I make a '(.*)' request to '(.*)' attached a valid picture$/,
+      (apiMethod: string, path: string) => {
+        const form = new FormData();
+        form.append("file", fs.createReadStream(FilePath[".jpeg"]));
+        const apiConfig: ApiConfig = {
+          url: `${getCurrentBaseURL()}${path}`,
+          method: apiMethod,
+          headers: {
+            ...form.getHeaders(),
+          },
+          data: form,
+        };
+        apiContext = new ApiContext(apiConfig);
+      }
+    );
+
+    whenIExecuteTheImageAPIAndReceiveResponse(when);
+
+    thenIExpectResponseHaveCorrectStatus(then);
+
+    andTheResponseShouldContainsCorrectMsg(and);
+  });
+
+  test("06 The Service will return error when I trying to upload multiple pictures at once", async ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
+    given(
+      /^I make a '(.*)' request to '(.*)' attached valid multiple pictures$/,
+      (apiMethod: string, path: string) => {
+        const form = new FormData();
+        form.append("file", fs.createReadStream(FilePath[".jpeg"]));
+        form.append("file", fs.createReadStream(FilePath[".jpg"]));
+        const apiConfig: ApiConfig = {
+          url: `${getCurrentBaseURL()}${path}`,
+          method: apiMethod,
+          headers: {
+            ...form.getHeaders(),
+          },
+          data: form,
+        };
+        apiContext = new ApiContext(apiConfig);
+      }
+    );
+
+    whenIExecuteTheImageAPIAndReceiveResponse(when);
+
+    thenIExpectResponseHaveCorrectStatus(then);
+
+    andTheResponseShouldContainsCorrectMsg(and);
   });
 });
