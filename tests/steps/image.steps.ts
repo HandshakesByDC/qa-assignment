@@ -4,7 +4,7 @@ import { ApiConfig } from "../../src/types/apiConfig";
 import { getCurrentBaseURL } from "../../src/core/env/env";
 import FormData from "form-data";
 import fs from "fs";
-import { FilePath, LargeFile } from "../../src/constants/filePath";
+import { FilePath, LargeFile } from "../../src/constants/files";
 import validator from "validator";
 import {
   extractNumberFromString,
@@ -61,7 +61,6 @@ defineFeature(feature, (test) => {
     and(
       /^the response have a permanent link to this picture in the correct format$/,
       () => {
-        uuid = extractUUIDFromUrl(apiResponse.body.image);
         imageUrl = apiResponse.body.image;
         uuid = extractUUIDFromUrl(imageUrl);
         commonStep.validateImageUrlIsInCorrectFormat(
@@ -84,7 +83,7 @@ defineFeature(feature, (test) => {
 
   const andTheUUIDIsInCorrectVersion = (and: DefineStepFunction) => {
     and(
-      /^the image link in the response is the valid UUID '(.*)'$/,
+      /^the image ID in the response is the valid UUID '(.*)'$/,
       (uuidVersion: string) => {
         const version = extractNumberFromString(uuidVersion);
         expect(validator.isUUID(uuid, version)).toBeTruthy();

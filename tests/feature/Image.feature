@@ -9,7 +9,7 @@ Feature: Image Service API Testing
         Then I expect response should have status 200
         And the response have a permanent link to this picture in the correct format
         And the response should have a json schema '{"image": "string"}'
-        And the image link in the response is the valid UUID 'v4'
+        And the image ID in the response is the valid UUID 'v4'
 
         Examples:
             | Extension |
@@ -29,12 +29,12 @@ Feature: Image Service API Testing
         Then I expect response should have status 200
         And the response have a permanent link to this picture in the correct format
         And the response should have a json schema '{"image": "string"}'
-        And the image link in the response is the valid UUID 'v4'
+        And the image ID in the response is the valid UUID 'v4'
 
     Scenario Outline: 03 I can not attach a file which is not an image to the Service
         Given I make a 'POST' request to '/api/image/' attached a '<Extension>' file which is not an picture
         When I execute the '/api/image' API and receive the response
-        Then I expect response should have status 400
+        Then I expect response should have status 403
         And the response should have a json schema '{"err": "string"}'
         And the error in response message should be "File isn' an image"
 
