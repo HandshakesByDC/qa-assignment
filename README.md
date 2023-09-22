@@ -21,6 +21,12 @@ This repo consists of the Jest API automation testing for the QA Assignment
   I want to attach a zip file containing multiple images
   and I want each of these uploaded images to have a permanent link.
 
+## Documentation
+
+- Per the 2nd and 3rd requirements of this assignment, I made the write-up docs to summary the working process as BDD process, also logging bugs during working.
+- Summary docs: `docs/QA Technical Assignment - Writeup.pdf`
+- Bug report: `docs/Bug-report.xlsx`
+
 ## Installation
 
 **Install dependencies**
