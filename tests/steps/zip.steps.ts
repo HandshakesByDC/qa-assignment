@@ -23,6 +23,7 @@ defineFeature(feature, (test) => {
   let zipPath: string;
   let listImages: string[];
 
+  //#region common steps
   const whenIExecuteTheImageAPIAndReceiveResponse = (
     when: DefineStepFunction
   ) => {
@@ -114,7 +115,7 @@ defineFeature(feature, (test) => {
       commonStep.validateObjectContains(apiResponse.body, errorMsg);
     });
   };
-
+  //#endregion
   test("01 I get a list of permanent links when attach a Zip file containing multiple same image file type", async ({
     given,
     when,
@@ -265,6 +266,7 @@ defineFeature(feature, (test) => {
       });
     });
 
+    //Api will remove files that are not image type
     and(
       /^total links in response less than total image files in Zip file$/,
       async () => {

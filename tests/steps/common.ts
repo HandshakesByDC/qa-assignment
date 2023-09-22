@@ -36,6 +36,7 @@ export class CommonStep {
     expect(firstObj).toBeLessThan(secondObj);
   }
 
+  //Validate exact string by concat parts of the URL
   public validateImageUrlIsInCorrectFormat(
     imageUrl: string,
     uuid: string,

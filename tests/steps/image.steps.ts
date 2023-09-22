@@ -27,6 +27,7 @@ defineFeature(feature, (test) => {
     commonStep = new CommonStep();
   });
 
+  //#region common steps
   const whenIExecuteTheImageAPIAndReceiveResponse = (
     when: DefineStepFunction
   ) => {
@@ -99,6 +100,7 @@ defineFeature(feature, (test) => {
       commonStep.validateObjectContains(apiResponse.body, errorMsg);
     });
   };
+  //#endregion
 
   test("01 I have a permanent link when attach a picture to the Service", async ({
     given,
