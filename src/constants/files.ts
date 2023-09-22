@@ -6,7 +6,7 @@ const PATH = {
 };
 
 export const FilePath: { [fileExtension: string]: string } = {
-  ".bmp": `${projectPath}${PATH.IMAGES}/flower-field.gif`,
+  ".bmp": `${projectPath}${PATH.IMAGES}/flower-field.bmp`,
   ".csv": `${projectPath}${PATH.OTHERS}/csv-sample.csv`,
   ".docx": `${projectPath}${PATH.OTHERS}/test-docs.docx`,
   ".ico": `${projectPath}${PATH.IMAGES}/whatsapp-icon.ico`,
