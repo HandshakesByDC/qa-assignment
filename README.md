@@ -52,7 +52,7 @@ $ yarn install
 
 - When the above tests are finished, the results are published to GitHub pages:
 
-* https://simonetrinh.github.io/HandshakesByDC-QA-Assignment/artifact/report.html
+* https://simonetrinh.github.io/HandshakesByDC-QA-Assignment/report.html
 
 - We can setup cron-job to run nighly but here I did not setup to save the resource for Github.
 - As my config, it will be automatically triggered right after a Pull request merged or we can run it again by re-run any job.
