@@ -30,6 +30,7 @@ Node Version: 16.x, 18.x ++
 Clone the generated repository on your local machine, move to the project root folder and install the dependencies defined in [`package.json`](./package.json)
 
 Using: Yarn or Npm
+
 Install yarn:
 
 ```bash
@@ -48,19 +49,47 @@ Install package by Yarn:
 $ yarn install
 ```
 
-## CI / CD Flow using Github Action
+## CI / CD Flow integration with Github Action:
 
 - When the above tests are finished, the results are published to GitHub pages:
 
-* https://simonetrinh.github.io/HandshakesByDC-QA-Assignment/report.html
+https://simonetrinh.github.io/HandshakesByDC-QA-Assignment/report.html
 
 - We can setup cron-job to run nighly but here I did not setup to save the resource for Github.
+
 - As my config, it will be automatically triggered right after a Pull request merged or we can run it again by re-run any job.
+
+## Cucumber integration
+
+- Cucumber is integrated in this project. That mean we can combined this Working flow of Automation testing team with the TDD/BDD process of Development team.
+
+- We can find cucumber features in `tests/feature`
+
+### For VSCode IDE:
+
+- Plugin need to install: Prettier, Cucumber (Gherkin) Full Support.
+
+- For Cucumber config to recognize `.feature`` files:
+
+In VSCode > Go to Cucumber plugin setting > Click `edit in setting.json` > Add these lines of config:
+
+```
+  "cucumberautocomplete.steps": [
+    "tests/**/*.steps.ts",
+  ],
+  "cucumberautocomplete.syncfeatures": tests/**/*.feature",
+```
 
 ## Running API Tests
 
-Go to the Project root directory and run command: (Yarn is prefer to show in the bash, if you are using Npm, replace it by npm)
+Go to the Project root directory and run command:
 
 ```bash
 $ yarn test
+```
+
+or
+
+```bash
+$ npm run test
 ```
